@@ -30,7 +30,7 @@ const Login = () => {
         } else {
             setStatus(null)
         }
-    })
+    }, [router.reset, errors])
 
     const submitForm = async event => {
         event.preventDefault()
@@ -45,78 +45,72 @@ const Login = () => {
     }
 
     return (
-        <>
-            <AuthSessionStatus className="mb-4" status={status} />
-            <form onSubmit={submitForm}>
-                {/* Email Address */}
-                <div>
-                    <Label htmlFor="email">Email</Label>
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+            <div className="w-full max-w-md bg-black/75 rounded-2xl shadow-lg p-8">
+                <h2 className="text-center text-2xl font-bold mb-6 bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] bg-clip-text text-transparent drop-shadow">
+                    Welcome Back to TechConnect Malawi
+                </h2>
 
-                    <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        className="block mt-1 w-full"
-                        onChange={event => setEmail(event.target.value)}
-                        required
-                        autoFocus
-                    />
+                <AuthSessionStatus className="mb-4 text-sm text-green-500" status={status} />
 
-                    <InputError messages={errors.email} className="mt-2" />
-                </div>
+                <form onSubmit={submitForm} className="space-y-6">
+                    {/* Email */}
+                    <div>
+                        <Label htmlFor="email" className="text-white">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            value={email}
+                            className="mt-1 w-full bg-blue-100 text-black/85 border border-black/90 focus:border-yellow-400 focus:ring-yellow-400"
+                            onChange={event => setEmail(event.target.value)}
+                            required
+                            autoFocus
+                        />
+                        <InputError messages={errors.email} className="mt-2 text-red-500 text-sm" />
+                    </div>
 
-                {/* Password */}
-                <div className="mt-4">
-                    <Label htmlFor="password">Password</Label>
+                    {/* Password */}
+                    <div>
+                        <Label htmlFor="password" className="text-white">Password</Label>
+                        <Input
+                            id="password"
+                            type="password"
+                            value={password}
+                            className="mt-1 w-full bg-blue-100 text-white border border-gray-700 focus:border-yellow-400 focus:ring-yellow-400"
+                            onChange={event => setPassword(event.target.value)}
+                            required
+                            autoComplete="current-password"
+                        />
+                        <InputError messages={errors.password} className="mt-2 text-red-500 text-sm" />
+                    </div>
 
-                    <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        className="block mt-1 w-full"
-                        onChange={event => setPassword(event.target.value)}
-                        required
-                        autoComplete="current-password"
-                    />
-
-                    <InputError
-                        messages={errors.password}
-                        className="mt-2"
-                    />
-                </div>
-
-                {/* Remember Me */}
-                <div className="block mt-4">
-                    <label
-                        htmlFor="remember_me"
-                        className="inline-flex items-center">
+                    {/* Remember Me */}
+                    <div className="flex items-center">
                         <input
                             id="remember_me"
                             type="checkbox"
                             name="remember"
-                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            onChange={event =>
-                                setShouldRemember(event.target.checked)
-                            }
+                            className="rounded border-gray-200 text-yellow-500 focus:ring-yellow-400"
+                            onChange={event => setShouldRemember(event.target.checked)}
                         />
-
-                        <span className="ml-2 text-sm text-gray-600">
+                        <label htmlFor="remember_me" className="ml-2 text-sm text-gray-200">
                             Remember me
-                        </span>
-                    </label>
-                </div>
+                        </label>
+                    </div>
 
-                <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href="/forgot-password"
-                        className="underline text-sm text-gray-600 hover:text-gray-900">
-                        Forgot your password?
-                    </Link>
+                    {/* Actions */}
+                    <div className="flex items-center justify-between">
+                        <Link href="/forgot-password" className="text-sm text-gray-100 hover:text-yellow-400">
+                            Forgot password?
+                        </Link>
 
-                    <Button className="ml-3">Login</Button>
-                </div>
-            </form>
-        </>
+                        <Button className="bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] text-gray-900 font-bold px-5 py-2 rounded-xl hover:brightness-110 transition-all shadow-md">
+                            Login
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
     )
 }
 

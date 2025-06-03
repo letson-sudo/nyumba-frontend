@@ -25,39 +25,42 @@ const Page = () => {
     }
 
     return (
-        <>
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email
-                address and we will email you a password reset link that
-                will allow you to choose a new one.
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+            <div className="w-full max-w-md bg-black/75 rounded-2xl shadow-lg p-8">
+                <h2 className="text-center text-2xl font-bold mb-6 bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] bg-clip-text text-transparent drop-shadow">
+                    Forgot Password
+                </h2>
+
+                <div className="mb-4 text-sm text-gray-200">
+                    No problem! Just enter your email address and we’ll send you a password reset link.
+                </div>
+
+                <AuthSessionStatus className="mb-4 text-green-400 text-sm" status={status} />
+
+                <form onSubmit={submitForm} className="space-y-6">
+                    <div>
+                        <Label htmlFor="email" className="text-white">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={email}
+                            className="mt-1 w-full bg-gray-100 text-black/85 border border-black/90 focus:border-yellow-400 focus:ring-yellow-400"
+                            onChange={event => setEmail(event.target.value)}
+                            required
+                            autoFocus
+                        />
+                        <InputError messages={errors.email} className="mt-2 text-red-500 text-sm" />
+                    </div>
+
+                    <div className="flex items-center justify-end">
+                        <Button className="bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] text-gray-900 font-bold px-5 py-2 rounded-xl hover:brightness-110 transition-all shadow-md">
+                            Send Reset Link
+                        </Button>
+                    </div>
+                </form>
             </div>
-
-            {/* Session Status */}
-            <AuthSessionStatus className="mb-4" status={status} />
-
-            <form onSubmit={submitForm}>
-                {/* Email Address */}
-                <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={email}
-                        className="block mt-1 w-full"
-                        onChange={event => setEmail(event.target.value)}
-                        required
-                        autoFocus
-                    />
-
-                    <InputError messages={errors.email} className="mt-2" />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Button>Email Password Reset Link</Button>
-                </div>
-            </form>
-        </>
+        </div>
     )
 }
 
