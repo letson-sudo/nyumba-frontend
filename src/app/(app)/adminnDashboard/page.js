@@ -1,6 +1,6 @@
 import Header from '@/app/(app)/Header'
-import ServiceProviderDashboard from '@/components/service-provider/ServiceProviderDashboard'
-import FloatingMessageButton from './chat/FloatingMessageButton'
+// import ServiceProviderDashboard from '@/components/service-provider/ServiceProviderDashboard'
+// import FloatingMessageButton from './chat/FloatingMessageButton'
 
 export const metadata = {
     title: 'vendor - Dashboard',
@@ -11,8 +11,8 @@ const Dashboard = () => {
         <>
             {/* <Header title="Dashboard" /> */}
             <div className="py-12">
-            <ServiceProviderDashboard /> 
-            </div> 
+            <ServiceProviderDashboard />
+            </div>
 
             <div>
                 {/* <FloatingMessage /> */}

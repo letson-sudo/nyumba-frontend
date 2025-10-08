@@ -1,5 +1,5 @@
 import Header from '@/app/(app)/Header'
-import ReviewComputerSale from '@/components/reviews/ReviewComputerSale'
+// import ReviewComputerSale from '@/components/reviews/ReviewComputerSale'
 
 export const metadata = {
     title: 'Review - Listings',
@@ -8,7 +8,7 @@ export const metadata = {
 const Dashboard = () => {
     return (
         <>
-         <ReviewComputerSale /> 
+         <ReviewComputerSale />
         </>
     )
 }
