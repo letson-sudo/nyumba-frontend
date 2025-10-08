@@ -5,7 +5,7 @@ export const Button = React.forwardRef(({ className, children, disabled, ...prop
     <button
       ref={ref}
       disabled={disabled}
-      className={`inline-flex items-center justify-center px-3 py-1 rounded-xl text-black   bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] disabled:cursor-not-allowed ${className}`}
+      className={`inline-flex items-center justify-center px-3 py-1 rounded-xl text-white   bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-600 disabled:cursor-not-allowed ${className}`}
       {...props}
     >
       {children}

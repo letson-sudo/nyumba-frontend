@@ -1,26 +1,40 @@
+
+
 import { Nunito } from 'next/font/google'
 import '@/app/global.css'
 import { FormDataProvider } from '@/components/context/FormContext'
+import Footer from './Footer'
+
 
 const nunitoFont = Nunito({
     subsets: ['latin'],
     display: 'swap',
 })
 
+export const metadata = {
+    title: 'Nyumba',
+    description: 'Find your perfect home easily',
+}
+
 const RootLayout = ({ children }) => {
     return (
         <html lang="en" className={nunitoFont.className}>
-            <body className="antialiased">
-            <FormDataProvider>
-          {children}
-        </FormDataProvider>
-                </body>
+            <head>
+                <link rel="manifest" href="/manifest.json" />
+                <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+            </head>
+            <body className="antialiased bg-white text-gray-900">
+                <FormDataProvider>
+                    {children}
+
+                    {/* <Footer/> */}
+                </FormDataProvider>
+
+
+            </body>
         </html>
     )
 }
 
-export const metadata = {
-    title: 'Laravel',
-}
-
 export default RootLayout
+

@@ -3,6 +3,8 @@
 import Button from '@/components/Button'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
+import AuthCard from '@/components/ui/AuthCard'
+
 
 const Page = () => {
     const { logout, resendEmailVerification } = useAuth({
@@ -13,13 +15,13 @@ const Page = () => {
     const [status, setStatus] = useState(null)
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-            <div className="w-full max-w-md bg-black/75 rounded-2xl shadow-lg p-8">
-                <h2 className="text-center text-2xl font-bold mb-6 bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] bg-clip-text text-transparent drop-shadow">
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center ">
+             <AuthCard>
+                <h2 className="flex items-center justify-center bg-gradient-to-r from-cyan-600 to-blue-500 bg-clip-text text-transparent text-2xl mb-7">
                     Verify Your Email
                 </h2>
 
-                <div className="mb-4 text-sm text-gray-200">
+                <div className="mb-4 text-sm text-gray-800">
                     Thanks for signing up! Before getting started, please verify
                     your email address by clicking on the link we just sent to your inbox.
                     If you didn’t receive the email, we’ll gladly send another.
@@ -34,20 +36,19 @@ const Page = () => {
                 <div className="mt-4 flex items-center justify-between">
                     <Button
                         onClick={() => resendEmailVerification({ setStatus })}
-                        className="bg-gradient-to-r from-[#d6a531] via-[#f5d478] to-[#d6a531] text-gray-900 font-bold px-4 py-2 rounded-xl hover:brightness-110 transition-all shadow-md"
                     >
                         Resend Email
                     </Button>
 
                     <button
                         type="button"
-                        className="underline text-sm text-gray-300 hover:text-yellow-400 transition-all"
+
                         onClick={logout}
                     >
                         Logout
                     </button>
                 </div>
-            </div>
+           </AuthCard>
         </div>
     )
 }

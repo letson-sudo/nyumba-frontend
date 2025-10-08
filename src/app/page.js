@@ -1,53 +1,31 @@
-import Header from '@/app/Header'
-import Homeslider from '@/components/Homeslider'
-import SalesCatalog from '@/components/SalesCatalog'
-import RepaireCenterServices from '@/components/RepaireCenterServices'
-import NetworkingServices from '@/components/NetworkingServices'
-import SoftwareDevelopment from '@/components/SoftwareDevelopment'
-import FloatingChatInput from '@/components/FloatingChatInput'
-import Footer from '@/app/Footer'
+import Header from '@/app/(app)/Header'
+import Page from '@/app/(public)/landing/page'
+
 
 export const metadata = {
-title: 'TechConnectMalawi',
+title: 'Nyumba',
+icons: {
+    icon: '/nyumba.png',
+    shortcut: '/nyumba1.png',
+},
 }
 
 const Home = () => {
 return (
     <>
-    <div className='bg-gray-200'>
+    <div>
     <Header />
     </div>
 
-
-    <div>
-        <Homeslider />
-    </div>  
-
-    <div>
-        <SalesCatalog />
-    </div>  
-
-    <div>
-        <RepaireCenterServices />
+    <div className='mt-6'>
+        <Page />
     </div>
 
-    <div>
-        <NetworkingServices />
-    </div>
 
-    <div>
-        <SoftwareDevelopment />
-    </div>
 
-    <div>
-        <FloatingChatInput />
-    </div>
-
-    <div>
-        <Footer />
-    </div>
     </>
 )
 }
 
 export default Home
+

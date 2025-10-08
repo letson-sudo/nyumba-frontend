@@ -1,5 +1,4 @@
 'use client'
-
 import { useAuth } from '@/hooks/auth'
 import Navigation from '@/app/(app)/Navigation'
 import Loading from '@/app/(app)/Loading'
@@ -12,10 +11,14 @@ const AppLayout = ({ children }) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100-; flex flex-col">
+            {/* Fixed top navigation */}
             <Navigation user={user} />
 
-            <main>{children}</main>
+            {/* Scrollable content area */}
+            <main className="flex-1 px-4 sm:px-6 md:px-8 py-6">
+                {children}
+            </main>
         </div>
     )
 }
