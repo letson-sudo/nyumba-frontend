@@ -3,7 +3,7 @@
 import axios from '@/lib/axios'
 
 // API Configuration - Properly configured to avoid CSRF issues
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'
 
 // Create axios instance with API-specific configuration
 export const createApiClient = () => {
@@ -16,15 +16,15 @@ export const createApiClient = () => {
       // This header tells Laravel it's an AJAX request
       'X-Requested-With': 'XMLHttpRequest',
     }
-  };
-
-  // Add auth token if available
-  const authToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-  if (authToken) {
-    config.headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  const client = axios.create(config);
+  // Add auth token if available
+  const authToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
+  if (authToken) {
+    config.headers['Authorization'] = `Bearer ${authToken}`
+  }
+
+  const client = axios.create(config)
 
   // Add response interceptor for better error handling
   client.interceptors.response.use(
@@ -41,58 +41,58 @@ export const createApiClient = () => {
           method: error.config?.method,
           headers: error.config?.headers
         }
-      });
+      })
 
-      return Promise.reject(error);
+      return Promise.reject(error)
     }
-  );
+  )
 
-  return client;
-};
+  return client
+}
 
 // Enhanced error handler with specific messaging
 export const handleApiError = (error, setError) => {
   if (error.response) {
-    const status = error.response.status;
-    const data = error.response.data;
+    const status = error.response.status
+    const data = error.response.data
 
     switch (status) {
       case 401:
-        setError('Authentication required. Please log in again.');
-        break;
+        setError('Authentication required. Please log in again.')
+        break
       case 403:
-        setError('Access denied. Please check your permissions.');
-        break;
+        setError('Access denied. Please check your permissions.')
+        break
       case 419:
-        setError('Session expired. Please refresh the page and try again.');
-        break;
+        setError('Session expired. Please refresh the page and try again.')
+        break
       case 422:
         // Handle validation errors specifically
         if (data?.errors) {
-          const errorMessages = Object.values(data.errors).flat();
-          setError(errorMessages[0] || 'Validation failed');
+          const errorMessages = Object.values(data.errors).flat()
+          setError(errorMessages[0] || 'Validation failed')
         } else {
-          setError(data?.message || 'Please check your input and try again.');
+          setError(data?.message || 'Please check your input and try again.')
         }
-        break;
+        break
       case 400:
-        setError(data?.message || 'Invalid request. Please check your input.');
-        break;
+        setError(data?.message || 'Invalid request. Please check your input.')
+        break
       case 500:
-        setError('Server error. Please try again later.');
-        break;
+        setError('Server error. Please try again later.')
+        break
       default:
-        setError(data?.message || `Request failed (${status})`);
+        setError(data?.message || `Request failed (${status})`)
     }
   } else if (error.request) {
-    setError('Network error. Please check your connection and try again.');
+    setError('Network error. Please check your connection and try again.')
   } else {
-    setError(`Error: ${error.message}`);
+    setError(`Error: ${error.message}`)
   }
-};
+}
 
 // CSRF token refresh function - No longer needed with session auth
 export const refreshCsrfToken = async () => {
   // Session-based authentication handles CSRF automatically
-  console.info('Using session-based authentication - CSRF handled automatically');
-};
+  console.info('Using session-based authentication - CSRF handled automatically')
+}

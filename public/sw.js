@@ -13,65 +13,65 @@
 
 // If the loader is already loaded, just stop.
 if (!self.define) {
-  let registry = {};
+  let registry = {}
 
   // Used for `eval` and `importScripts` where we can't get script URL by other means.
   // In both cases, it's safe to use a global var because those functions are synchronous.
-  let nextDefineUri;
+  let nextDefineUri
 
   const singleRequire = (uri, parentUri) => {
-    uri = new URL(uri + ".js", parentUri).href;
+    uri = new URL(uri + ".js", parentUri).href
     return registry[uri] || (
       
         new Promise(resolve => {
           if ("document" in self) {
-            const script = document.createElement("script");
-            script.src = uri;
-            script.onload = resolve;
-            document.head.appendChild(script);
+            const script = document.createElement("script")
+            script.src = uri
+            script.onload = resolve
+            document.head.appendChild(script)
           } else {
-            nextDefineUri = uri;
-            importScripts(uri);
-            resolve();
+            nextDefineUri = uri
+            importScripts(uri)
+            resolve()
           }
         })
       
       .then(() => {
-        let promise = registry[uri];
+        let promise = registry[uri]
         if (!promise) {
-          throw new Error(`Module ${uri} didn’t register its module`);
+          throw new Error(`Module ${uri} didn’t register its module`)
         }
-        return promise;
+        return promise
       })
-    );
-  };
+    )
+  }
 
   self.define = (depsNames, factory) => {
-    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
+    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href
     if (registry[uri]) {
       // Module is already loading or loaded.
-      return;
+      return
     }
-    let exports = {};
-    const require = depUri => singleRequire(depUri, uri);
+    let exports = {}
+    const require = depUri => singleRequire(depUri, uri)
     const specialDeps = {
       module: { uri },
       exports,
       require
-    };
+    }
     registry[uri] = Promise.all(depsNames.map(
       depName => specialDeps[depName] || require(depName)
     )).then(deps => {
-      factory(...deps);
-      return exports;
-    });
-  };
+      factory(...deps)
+      return exports
+    })
+  }
 }
-define(['./workbox-e43f5367'], (function (workbox) { 'use strict';
+define(['./workbox-e43f5367'], (function (workbox) { 'use strict'
 
-  importScripts();
-  self.skipWaiting();
-  workbox.clientsClaim();
+  importScripts()
+  self.skipWaiting()
+  workbox.clientsClaim()
   workbox.registerRoute("/", new workbox.NetworkFirst({
     "cacheName": "start-url",
     plugins: [{
@@ -86,16 +86,16 @@ define(['./workbox-e43f5367'], (function (workbox) { 'use strict';
             status: 200,
             statusText: 'OK',
             headers: response.headers
-          });
+          })
         }
-        return response;
+        return response
       }
     }]
-  }), 'GET');
+  }), 'GET')
   workbox.registerRoute(/.*/i, new workbox.NetworkOnly({
     "cacheName": "dev",
     plugins: []
-  }), 'GET');
+  }), 'GET')
 
-}));
+}))
 //# sourceMappingURL=sw.js.map

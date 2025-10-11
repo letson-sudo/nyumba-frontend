@@ -215,64 +215,6 @@ const CardSkeleton = () => (
   </div>
 )
 
-// Property card skeleton
-const PropertyCardSkeleton = () => (
-  <div className="bg-white p-6 shadow-lg rounded-2xl border border-gray-100">
-    <div className="animate-pulse">
-      <div className="mb-4">
-        <div className="h-6 bg-gray-200 rounded mb-2" />
-        <div className="h-4 bg-gray-200 rounded w-3/4" />
-      </div>
-      <div className="mb-4 space-y-2">
-        <div className="h-4 bg-gray-200 rounded w-1/2" />
-        <div className="h-4 bg-gray-200 rounded w-2/3" />
-        <div className="h-4 bg-gray-200 rounded" />
-      </div>
-      <div className="border-t border-gray-100 pt-3 mt-4">
-        <div className="flex gap-3">
-          <div className="h-4 bg-gray-200 rounded w-12" />
-          <div className="h-1 bg-gray-200 rounded w-1" />
-          <div className="h-4 bg-gray-200 rounded w-12" />
-        </div>
-      </div>
-    </div>
-  </div>
-)
-
-// Table row skeleton
-const TableRowSkeleton = () => (
-  <tr className="border-b border-gray-100">
-    <td className="py-4 px-6">
-      <div className="animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-24" />
-      </div>
-    </td>
-    <td className="py-4 px-6">
-      <div className="animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-32" />
-      </div>
-    </td>
-    <td className="py-4 px-6">
-      <div className="animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-20" />
-      </div>
-    </td>
-    <td className="py-4 px-6">
-      <div className="animate-pulse">
-        <div className="h-6 bg-gray-200 rounded w-20" />
-      </div>
-    </td>
-    <td className="py-4 px-6">
-      <div className="animate-pulse">
-        <div className="flex gap-2">
-          <div className="h-4 bg-gray-200 rounded w-12" />
-          <div className="h-4 bg-gray-200 rounded w-12" />
-        </div>
-      </div>
-    </td>
-  </tr>
-)
-
 // Sidebar navigation skeleton
 const SidebarSkeleton = () => (
   <aside className="w-full lg:w-72 bg-white shadow-lg border-r border-gray-200/60 backdrop-blur-sm">

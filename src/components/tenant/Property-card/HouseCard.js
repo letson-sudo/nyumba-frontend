@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { Lock } from "lucide-react";
-import StatusBadge from "../../properties-section/StatusBadge";
-import usePropertyStatus from "../../properties-section/hooks/usePropertyStatus";
-import PropertyDataDisplay from "./PropertyDataDisplay";
-import PropertyImageDisplay from "./PropertyImageDisplay";
-import PropertyActionButton from "./PropertyActionButton";
+import React from "react"
+import { useRouter } from "next/navigation"
+import { Lock } from "lucide-react"
+import StatusBadge from "../../properties-section/StatusBadge"
+import usePropertyStatus from "../../properties-section/hooks/usePropertyStatus"
+import PropertyDataDisplay from "./PropertyDataDisplay"
+import PropertyImageDisplay from "./PropertyImageDisplay"
+import PropertyActionButton from "./PropertyActionButton"
 
 const HouseCard = ({
   house,
@@ -17,40 +17,40 @@ const HouseCard = ({
   onToggleFavorite,
   laravelApiBase
 }) => {
-  const router = useRouter();
+  const router = useRouter()
 
   // Use the property status hook to fetch real-time status
-  const { status: fetchedStatus, isLoading: statusLoading, error: statusError } = usePropertyStatus(house.id);
+  const { status: fetchedStatus, isLoading: statusLoading, error: statusError } = usePropertyStatus(house.id)
 
   // Determine if features should be active
-  const hasActiveAccess = isSubscribed && subscriptionStatus === 'active' && daysRemaining > 0;
+  const hasActiveAccess = isSubscribed && subscriptionStatus === 'active' && daysRemaining > 0
 
   // Get subscription status message
   const getSubscriptionMessage = () => {
-    if (!isSubscribed) return "Subscribe to unlock";
-    if (subscriptionStatus === 'processing' || subscriptionStatus === 'pending') return "Processing payment...";
-    if (subscriptionStatus === 'active' && daysRemaining === 0) return "Subscription expired";
-    if (subscriptionStatus === 'canceled') return "Subscription canceled";
-    return "Subscribe to unlock";
-  };
+    if (!isSubscribed) return "Subscribe to unlock"
+    if (subscriptionStatus === 'processing' || subscriptionStatus === 'pending') return "Processing payment..."
+    if (subscriptionStatus === 'active' && daysRemaining === 0) return "Subscription expired"
+    if (subscriptionStatus === 'canceled') return "Subscription canceled"
+    return "Subscribe to unlock"
+  }
 
   // Get location text based on access
   const getLocationText = () => {
     if (hasActiveAccess) {
-      return house.location || 'Location not provided';
+      return house.location || 'Location not provided'
     }
-    return getSubscriptionMessage();
-  };
+    return getSubscriptionMessage()
+  }
 
   // Handle booking/viewing action
   const handleBookViewing = (propertyId) => {
     if (hasActiveAccess && propertyId) {
-      router.push(`/properties/${propertyId}`);
+      router.push(`/properties/${propertyId}`)
     }
-  };
+  }
 
   // Use fetched status with fallback to house.status
-  const propertyStatus = fetchedStatus || house.status || 'vacant';
+  const propertyStatus = fetchedStatus || house.status || 'vacant'
 
   // Create status badge component
   const statusBadgeComponent = hasActiveAccess && propertyStatus ? (
@@ -64,7 +64,7 @@ const HouseCard = ({
     <div className="bg-gray-500/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
       {statusLoading ? '...' : 'LOCKED'}
     </div>
-  ) : null;
+  ) : null
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 relative">
@@ -135,10 +135,10 @@ const HouseCard = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default HouseCard;
+export default HouseCard
 
 // "use client";
 

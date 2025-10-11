@@ -1,95 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { X, CreditCard, Smartphone, Loader2, CheckCircle, AlertCircle, Phone } from 'lucide-react';
-import { createApiClient, handleApiError, refreshCsrfToken } from './utils/apiUtils';
+import React, { useState, useEffect } from 'react'
+import { X, CreditCard, Smartphone, Loader2, CheckCircle, AlertCircle, Phone } from 'lucide-react'
+import { createApiClient, handleApiError, refreshCsrfToken } from './utils/apiUtils'
 
 const PaymentModal = ({ plans, onPaymentSuccess, onClose }) => {
-  const [paymentMethod, setPaymentMethod] = useState('mobile');
+  const [paymentMethod, setPaymentMethod] = useState('mobile')
   const [paymentDetails, setPaymentDetails] = useState({
     mobileNumber: '',
     bankAccount: '',
     bankName: '',
     accountHolder: ''
-  });
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('premium');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  })
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState('premium')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   // Initialize CSRF token when modal opens
   useEffect(() => {
-    initializeCsrfToken();
-  }, []);
+    initializeCsrfToken()
+  }, [])
 
   const initializeCsrfToken = async () => {
     try {
-      await refreshCsrfToken();
+      await refreshCsrfToken()
     } catch (error) {
-      console.error('Failed to initialize CSRF token:', error);
+      console.error('Failed to initialize CSRF token:', error)
     }
-  };
+  }
 
   const handleInputChange = (field, value) => {
     setPaymentDetails(prev => ({
       ...prev,
       [field]: value
-    }));
+    }))
     // Clear errors when user starts typing
-    if (error) setError('');
-  };
+    if (error) setError('')
+  }
 
   const formatPhoneNumber = (value) => {
     // Remove all non-digits
-    const digits = value.replace(/\D/g, '');
+    const digits = value.replace(/\D/g, '')
 
     // Handle different input scenarios
     if (digits.length === 9) {
-      return `+265${digits}`;
+      return `+265${digits}`
     } else if (digits.length === 12 && digits.startsWith('265')) {
-      return `+${digits}`;
+      return `+${digits}`
     } else if (digits.length > 12 && digits.startsWith('265')) {
-      return `+${digits.substring(0, 12)}`;
+      return `+${digits.substring(0, 12)}`
     }
 
-    return value;
-  };
+    return value
+  }
 
   const validateMobileNumber = (number) => {
     // Must match +265xxxxxxxxx format exactly
-    const phoneRegex = /^\+265[0-9]{9}$/;
-    return phoneRegex.test(number);
-  };
+    const phoneRegex = /^\+265[0-9]{9}$/
+    return phoneRegex.test(number)
+  }
 
   const validateBankDetails = () => {
-    if (!paymentDetails.bankName) return 'Bank name is required';
-    if (!paymentDetails.bankAccount) return 'Bank account number is required';
-    if (!paymentDetails.accountHolder) return 'Account holder name is required';
-    if (paymentDetails.bankAccount.length < 8) return 'Bank account number seems too short';
-    return null;
-  };
+    if (!paymentDetails.bankName) return 'Bank name is required'
+    if (!paymentDetails.bankAccount) return 'Bank account number is required'
+    if (!paymentDetails.accountHolder) return 'Account holder name is required'
+    if (paymentDetails.bankAccount.length < 8) return 'Bank account number seems too short'
+    return null
+  }
 
   const handlePaymentSubmit = async (e) => {
-    e.preventDefault();
-    setIsProcessing(true);
-    setError('');
-    setSuccess('');
+    e.preventDefault()
+    setIsProcessing(true)
+    setError('')
+    setSuccess('')
 
     try {
       // Client-side validation
       if (paymentMethod === 'mobile') {
         if (!paymentDetails.mobileNumber) {
-          setError('Mobile number is required');
-          return;
+          setError('Mobile number is required')
+          return
         }
 
         if (!validateMobileNumber(paymentDetails.mobileNumber)) {
-          setError('Please enter a valid Malawian mobile number (+265xxxxxxxxx)');
-          return;
+          setError('Please enter a valid Malawian mobile number (+265xxxxxxxxx)')
+          return
         }
       } else {
-        const bankValidationError = validateBankDetails();
+        const bankValidationError = validateBankDetails()
         if (bankValidationError) {
-          setError(bankValidationError);
-          return;
+          setError(bankValidationError)
+          return
         }
       }
 
@@ -97,27 +97,27 @@ const PaymentModal = ({ plans, onPaymentSuccess, onClose }) => {
       const paymentData = {
         plan: selectedPlan,
         payment_method: paymentMethod,
-      };
-
-      if (paymentMethod === 'mobile') {
-        paymentData.mobile_number = paymentDetails.mobileNumber;
-      } else {
-        paymentData.bank_name = paymentDetails.bankName;
-        paymentData.bank_account = paymentDetails.bankAccount;
-        paymentData.account_holder = paymentDetails.accountHolder;
       }
 
-      console.log('Submitting payment data:', paymentData);
+      if (paymentMethod === 'mobile') {
+        paymentData.mobile_number = paymentDetails.mobileNumber
+      } else {
+        paymentData.bank_name = paymentDetails.bankName
+        paymentData.bank_account = paymentDetails.bankAccount
+        paymentData.account_holder = paymentDetails.accountHolder
+      }
 
-      const apiClient = createApiClient();
+      console.log('Submitting payment data:', paymentData)
+
+      const apiClient = createApiClient()
       const response = await apiClient.post('/api/subscriptions/payment', paymentData, {
         withCredentials: true, // Ensure session cookies are sent
-      });
+      })
 
-      console.log('Payment response:', response.data);
+      console.log('Payment response:', response.data)
 
       if (response.data?.status === 'success') {
-        setSuccess('Payment initiated successfully! Please complete the payment on your mobile device.');
+        setSuccess('Payment initiated successfully! Please complete the payment on your mobile device.')
 
         // Call the success callback
         if (onPaymentSuccess) {
@@ -125,50 +125,50 @@ const PaymentModal = ({ plans, onPaymentSuccess, onClose }) => {
             subscriptionId: response.data.subscription_id,
             transactionId: response.data.transaction_id,
             status: response.data.subscription_status || 'processing'
-          });
+          })
         }
 
         // Close modal after a short delay to show success message
         setTimeout(() => {
-          onClose();
-        }, 3000);
+          onClose()
+        }, 3000)
 
       } else {
-        setError(response.data?.message || 'Payment initiation failed');
+        setError(response.data?.message || 'Payment initiation failed')
       }
 
     } catch (error) {
-      console.error('Payment submission error:', error);
-      handleApiError(error, setError);
+      console.error('Payment submission error:', error)
+      handleApiError(error, setError)
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const handleCloseModal = () => {
-    setError('');
-    setSuccess('');
+    setError('')
+    setSuccess('')
     setPaymentDetails({
       mobileNumber: '',
       bankAccount: '',
       bankName: '',
       accountHolder: ''
-    });
-    onClose();
-  };
+    })
+    onClose()
+  }
 
   const handleMobileNumberChange = (value) => {
-    const formatted = formatPhoneNumber(value);
-    handleInputChange('mobileNumber', formatted);
-  };
+    const formatted = formatPhoneNumber(value)
+    handleInputChange('mobileNumber', formatted)
+  }
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-MW', {
       style: 'currency',
       currency: 'MWK',
       minimumFractionDigits: 0
-    }).format(amount);
-  };
+    }).format(amount)
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -362,7 +362,7 @@ const PaymentModal = ({ plans, onPaymentSuccess, onClose }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentModal;
+export default PaymentModal

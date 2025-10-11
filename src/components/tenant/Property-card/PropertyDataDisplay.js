@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { MapPin, Star } from "lucide-react";
+"use client"
+import React from "react"
+import { MapPin, Star } from "lucide-react"
 
 const PropertyDataDisplay = ({
   house,
@@ -84,7 +84,7 @@ const PropertyDataDisplay = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PropertyDataDisplay;
+export default PropertyDataDisplay

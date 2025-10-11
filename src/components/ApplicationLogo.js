@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const ApplicationLogo = ({ className = "w-44 h-44", variant = "default" }) => {
   const variants = {
@@ -25,9 +25,9 @@ const ApplicationLogo = ({ className = "w-44 h-44", variant = "default" }) => {
       door: "#D97706" // Amber-600
     },
     gradient: "url(#logoGradient)"
-  };
+  }
 
-  const colors = variant === "gradient" ? {} : variants[variant] || variants.default;
+  const colors = variant === "gradient" ? {} : variants[variant] || variants.default
 
   return (
     <svg
@@ -221,7 +221,7 @@ const ApplicationLogo = ({ className = "w-44 h-44", variant = "default" }) => {
         />
       </g>
     </svg>
-  );
-};
+  )
+}
 
-export default ApplicationLogo;
+export default ApplicationLogo

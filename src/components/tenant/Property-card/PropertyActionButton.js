@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { Lock, Clock, Calendar } from "lucide-react";
+"use client"
+import React from "react"
+import { Lock, Clock, Calendar } from "lucide-react"
 
 const PropertyActionButton = ({
   house,
@@ -12,57 +12,57 @@ const PropertyActionButton = ({
   daysRemaining
 }) => {
   // Check if property is available for booking
-  const isPropertyAvailable = propertyStatus === 'vacant' || propertyStatus === 'available';
+  const isPropertyAvailable = propertyStatus === 'vacant' || propertyStatus === 'available'
 
   // Get appropriate button text based on access and property status
   const getButtonText = () => {
     if (!hasActiveAccess) {
-      return getSubscriptionMessage();
+      return getSubscriptionMessage()
     }
 
     if (!isPropertyAvailable) {
       switch (propertyStatus) {
         case 'booked':
-          return "Currently Occupied";
+          return "Currently Occupied"
         case 'maintenance':
-          return "Under Maintenance";
+          return "Under Maintenance"
         case 'unavailable':
-          return "Not Available";
+          return "Not Available"
         default:
-          return "Currently Occupied";
+          return "Currently Occupied"
       }
     }
 
-    return "Book Viewing";
-  };
+    return "Book Viewing"
+  }
 
   // Get appropriate icon for button
   const getButtonIcon = () => {
     if (!hasActiveAccess) {
-      return <Lock className="mr-1 text-sm" />;
+      return <Lock className="mr-1 text-sm" />
     }
 
     if (!isPropertyAvailable) {
-      return <Clock className="mr-1 text-sm" />;
+      return <Clock className="mr-1 text-sm" />
     }
 
-    return <Calendar className="mr-1 text-sm" />;
-  };
+    return <Calendar className="mr-1 text-sm" />
+  }
 
   // Get button styling based on state
   const getButtonStyles = () => {
     if (hasActiveAccess && isPropertyAvailable) {
-      return "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer";
+      return "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
     }
-    return "bg-gray-200 text-gray-500 cursor-not-allowed";
-  };
+    return "bg-gray-200 text-gray-500 cursor-not-allowed"
+  }
 
   // Handle button click
   const handleButtonClick = () => {
     if (hasActiveAccess && isPropertyAvailable && onBookViewing) {
-      onBookViewing(house.id);
+      onBookViewing(house.id)
     }
-  };
+  }
 
   return (
     <div className="space-y-3">
@@ -106,7 +106,7 @@ const PropertyActionButton = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PropertyActionButton;
+export default PropertyActionButton
