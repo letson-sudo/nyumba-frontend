@@ -1,3 +1,4 @@
+import axios from '@/lib/axios'
 import React, { useState, useEffect } from "react";
 import {
   Calendar,
@@ -96,18 +97,24 @@ const PropertyBookingCard = ({ property, propertyId, apiBase }) => {
         return;
       }
 
-      // Step 3: Update status table to 'booked'
-      const statusResponse = await fetch(`${apiBase}/api/status/update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          property_id: parseInt(propertyId),
-          status: "booked",
-        }),
-      });
+
+ // Step 3: Update status table to 'booked'
+const statusResponse = await axios.post(`${apiBase}/api/status/update`, {
+  property_id: parseInt(propertyId),
+  status: "booked",
+});
+
+// const statusData = statusResponse.data;
+
+if (!(statusResponse.status === 200 && statusData.success)) {
+  setErrorMessage(statusData.message || "Failed to update property status.");
+  setIsSubmitting(false);
+  return;
+}
+
+
+
+
 
       const statusData = await statusResponse.json();
 

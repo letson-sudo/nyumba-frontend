@@ -1,46 +1,36 @@
+    
 import React, { useState, useEffect } from 'react';
 import { Crown } from 'lucide-react';
 import PaymentModal from './PaymentModal';
 import { createApiClient, handleApiError } from './utils/apiUtils';
 
-const SubscriptionPrompt = ({ userId, onSubscribe }) => {
+const SubscriptionPrompt = ({
+  onSubscribe,
+  subscriptionStatus = 'none',
+  daysRemaining = 0,
+  isLoading = false
+}) => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [plans, setPlans] = useState({});
-  const [subscriptionData, setSubscriptionData] = useState(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState('none');
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchSubscriptionStatus();
     fetchPlans();
-  }, [userId]);
+  }, []);
 
-  const fetchSubscriptionStatus = async () => {
-    try {
-      setLoading(true);
-      const apiClient = createApiClient();
-      const response = await apiClient.get('/api/subscriptions/status', {
-        withCredentials: true,
-      });
+  const formatDaysAndHours = (decimalDays) => {
+    if (decimalDays <= 0) return '0 days';
 
-      console.log('Subscription status response:', response.data);
+    const totalHours = decimalDays * 24;
+    const days = Math.floor(decimalDays);
+    const hours = Math.floor(totalHours % 24);
 
-      if (response.data?.status === 'success') {
-        const subscription = response.data.subscription;
-        setSubscriptionData(subscription);
-        setIsSubscribed(response.data.is_subscribed || false);
-        setSubscriptionStatus(response.data.subscription_status || 'none');
-      }
-    } catch (error) {
-      console.error('Failed to fetch subscription status:', error);
-      handleApiError(error, setError);
-      // Set defaults on error
-      setIsSubscribed(false);
-      setSubscriptionStatus('none');
-    } finally {
-      setLoading(false);
+    if (days === 0) {
+      return `${hours} hour${hours !== 1 ? 's' : ''} remaining`;
+    } else if (hours === 0) {
+      return `${days} day${days !== 1 ? 's' : ''} remaining`;
+    } else {
+      return `${days} day${days !== 1 ? 's' : ''} ${hours} hour${hours !== 1 ? 's' : ''} remaining`;
     }
   };
 
@@ -50,8 +40,6 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
       const response = await apiClient.get('/api/subscriptions/plans', {
         withCredentials: true,
       });
-
-      console.log('Plans response:', response.data);
 
       if (response.data?.status === 'success' && response.data?.plans) {
         setPlans(response.data.plans);
@@ -65,7 +53,6 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
         });
       }
     } catch (error) {
-      console.error('Failed to fetch plans:', error);
       // Set default plans on error
       setPlans({
         premium: { name: 'Premium', price: 999.00 },
@@ -79,10 +66,7 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
   };
 
   const handlePaymentSuccess = (subscriptionData) => {
-    // Refresh subscription status
-    fetchSubscriptionStatus();
-
-    // Call the parent component's callback
+    // Call the parent component's callback to refresh subscription status
     if (onSubscribe) {
       onSubscribe(subscriptionData);
     }
@@ -111,7 +95,7 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
   };
 
   // Loading state
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="bg-gray-100 p-6 rounded-xl shadow-lg mb-6 animate-pulse">
         <div className="flex items-center space-x-3">
@@ -126,7 +110,9 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
   }
 
   // If user has an active subscription, show watermark
-  if (isSubscribed && subscriptionStatus === 'active') {
+  if (subscriptionStatus === 'active') {
+    const timeRemaining = formatDaysAndHours(daysRemaining);
+
     return (
       <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4 rounded-xl shadow-lg mb-6">
         <div className="flex items-center space-x-3">
@@ -136,23 +122,84 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
               <div>
                 <span className="text-lg font-semibold">Subscribed</span>
                 <p className="text-green-100 text-sm">
-                  {subscriptionData?.plan_name} Plan
-                  {subscriptionData?.end_date && (
+                  Premium Plan
+                  {daysRemaining > 0 && (
                     <span className="ml-2">
-                      • Expires {formatDate(subscriptionData.end_date)}
+                      • Expires in {timeRemaining}
                     </span>
                   )}
                 </p>
               </div>
-              <div className="text-right text-sm text-green-100">
-                {subscriptionData?.days_remaining !== undefined && (
-                  <p>{subscriptionData.days_remaining} days remaining</p>
-                )}
-              </div>
+              {daysRemaining > 0 && (
+                <div className="text-right text-sm text-green-100">
+                  <p>{timeRemaining}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+    );
+  }
+
+  // If subscription is expired, show expired state
+  if (subscriptionStatus === 'expired') {
+    return (
+      <>
+        <div className="bg-gradient-to-r from-orange-600 to-red-700 text-white p-6 rounded-xl shadow-lg mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Crown className="h-8 w-8 text-yellow-300" />
+              <div>
+                <h3 className="text-xl font-bold">Subscription Expired</h3>
+                <p className="text-orange-100">
+                  Your premium access has ended. Renew to continue enjoying premium features.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleSubscribeClick}
+              className="bg-white text-orange-600 px-6 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-colors cursor-pointer"
+            >
+              Renew Subscription
+            </button>
+          </div>
+
+          {Object.keys(plans).length > 0 && (
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Object.entries(plans).map(([key, plan]) => (
+                <div key={key} className="bg-white bg-opacity-20 p-4 rounded-lg">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold">{plan.name} Plan</h4>
+                      <p className="text-sm text-orange-100">Monthly subscription</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold">{formatCurrency(plan.price)}</span>
+                      <span className="text-sm text-orange-100">/month</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-4 bg-red-500 bg-opacity-20 border border-red-400 text-red-100 px-4 py-2 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+        </div>
+
+        {/* Payment Modal */}
+        {showPaymentModal && (
+          <PaymentModal
+            plans={plans}
+            onPaymentSuccess={handlePaymentSuccess}
+            onClose={handlePaymentClose}
+          />
+        )}
+      </>
     );
   }
 
@@ -188,7 +235,7 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
           </div>
           <button
             onClick={handleSubscribeClick}
-            className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+            className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors cursor-pointer"
           >
             Subscribe Now
           </button>
@@ -233,4 +280,3 @@ const SubscriptionPrompt = ({ userId, onSubscribe }) => {
 };
 
 export default SubscriptionPrompt;
-
